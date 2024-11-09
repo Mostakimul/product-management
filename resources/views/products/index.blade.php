@@ -6,6 +6,22 @@
 
     <a href="{{ route('products.create') }}" class="btn btn-secondary my-5 mx-5">Add New Product</a>
 
+    <div class="mb-3">
+        <strong>Sort by:</strong>
+        <a href="{{ route('products.index', ['sort' => 'name', 'order' => $sortOrder === 'asc' ? 'desc' : 'asc']) }}" class="btn btn-link">
+            Name
+            @if ($sortField === 'name')
+                <span>{{ $sortOrder === 'asc' ? '↓' : '↑' }}</span>
+            @endif
+        </a>
+        <a href="{{ route('products.index', ['sort' => 'price', 'order' => $sortOrder === 'asc' ? 'desc' : 'asc']) }}" class="btn btn-link">
+            Price
+            @if ($sortField === 'price')
+                <span>{{ $sortOrder === 'asc' ? '↓' : '↑' }}</span>
+            @endif
+        </a>
+    </div>
+
     @if($products->count())
         <table class="table table-bordered">
             <thead>

@@ -8,10 +8,15 @@ use Illuminate\Http\Request;
 class ProductController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $products = Product::paginate(5); 
-        return view('products.index', compact('products'));
+        $sortField = $request->get('sort', 'name'); 
+        $sortOrder = $request->get('order', 'asc'); 
+
+
+        $products = Product::orderBy($sortField, $sortOrder)->paginate(7);
+
+        return view('products.index', compact('products', 'sortField', 'sortOrder'));
     }
 
 
