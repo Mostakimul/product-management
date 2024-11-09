@@ -3,7 +3,8 @@
 @section('content')
 <div class="container">
     <h1>All Products</h1>
-    
+
+    <a href="{{ route('products.create') }}" class="btn btn-secondary my-5 mx-5">Add New Product</a>
 
     @if($products->count())
         <table class="table table-bordered">

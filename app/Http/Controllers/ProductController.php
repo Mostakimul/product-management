@@ -21,7 +21,7 @@ class ProductController extends Controller
      */
     public function create()
     {
-        //
+        return view('products.create');
     }
 
     /**
@@ -29,7 +29,23 @@ class ProductController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validated = $request->validate([
+            'product_id' => 'required|string|unique:products,product_id',
+            'name' => 'required|string|max:255',
+            'price' => 'required|numeric|min:0',
+        ]);
+
+        $product = Product::create([
+            'product_id' => $validated['product_id'],
+            'name' => $validated['name'],
+            'price' => $validated['price'],
+            'description' => $request->input('description'),
+            'stock' => $request->input('stock'),
+            'image' => $request->input('image'),
+
+        ]);
+
+        return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
     /**
