@@ -10,13 +10,17 @@ class ProductController extends Controller
 
     public function index(Request $request)
     {
-        $sortField = $request->get('sort', 'name'); 
-        $sortOrder = $request->get('order', 'asc'); 
+        $sortField = $request->get('sort', 'name');
+        $sortOrder = $request->get('order', 'asc');
 
+        $searchQuery = $request->get('search', '');
 
-        $products = Product::orderBy($sortField, $sortOrder)->paginate(7);
+        $products = Product::where('product_id', 'like', "%$searchQuery%")
+            ->orWhere('description', 'like', "%$searchQuery%")
+            ->orderBy($sortField, $sortOrder)
+            ->paginate(10);
 
-        return view('products.index', compact('products', 'sortField', 'sortOrder'));
+        return view('products.index', compact('products', 'sortField', 'sortOrder', 'searchQuery'));
     }
 
 
@@ -46,14 +50,14 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Product created successfully.');
     }
 
- 
+
     public function show($id)
     {
         $product = Product::findOrFail($id);
         return view('products.show', compact('product'));
     }
 
- 
+
     public function edit($id)
     {
         $product = Product::findOrFail($id);
@@ -63,7 +67,7 @@ class ProductController extends Controller
     public function update(Request $request, $id)
     {
         $validated = $request->validate([
-            'product_id' => 'required|string|unique:products,product_id,'.$id, 
+            'product_id' => 'required|string|unique:products,product_id,' . $id,
             'name' => 'required|string|max:255',
             'price' => 'required|numeric|min:0',
         ]);
@@ -74,7 +78,7 @@ class ProductController extends Controller
         return redirect()->route('products.index')->with('success', 'Product updated successfully.');
     }
 
-  
+
     public function destroy($id)
     {
         $product = Product::findOrFail($id);
